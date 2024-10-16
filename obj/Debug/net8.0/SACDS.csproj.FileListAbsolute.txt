@@ -254,3 +254,4 @@ C:\Users\chess\source\repos\SACDS\SACDS\bin\Debug\net8.0\runtimes\win\lib\net7.0
 C:\Users\chess\source\repos\SACDS\SACDS\bin\Debug\net8.0\runtimes\win\lib\net7.0\System.Security.Cryptography.ProtectedData.dll
 C:\Users\chess\source\repos\SACDS\SACDS\bin\Debug\net8.0\runtimes\win\lib\net7.0\System.Windows.Extensions.dll
 C:\Users\chess\source\repos\SACDS\SACDS\obj\Debug\net8.0\SACDS.sourcelink.json
+C:\Users\chess\source\repos\SACDS\SACDS\bin\Debug\net8.0\AutoMapper.dll

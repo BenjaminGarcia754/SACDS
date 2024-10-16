@@ -1,6 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using SACDS.Modelo.DTO;
 using SACDS.Modelo.EntityFramework;
 
 namespace SACDS.Controllers
@@ -10,19 +12,21 @@ namespace SACDS.Controllers
     public class DonacionUrgenteController : Controller
     {
         public readonly SADCDSDbContext _context;
-        public DonacionUrgenteController(SADCDSDbContext context)
+        public readonly IMapper _mapper;
+        public DonacionUrgenteController(SADCDSDbContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
         [HttpGet]
         [Route("GetDonacionesUrgentes")]
-        public async Task<ActionResult<IEnumerable<DonacionUrgente>>> GetDonacionesUrgentes()
+        public async Task<ActionResult<IEnumerable<DonacionUrgenteDTO>>> GetDonacionesUrgentes()
         {
             try
             {
                 List<DonacionUrgente> donacionesUrgentes = _context.DonacionUrgentes.ToList();
-                return donacionesUrgentes;
+                return _mapper.Map<List<DonacionUrgenteDTO>>(donacionesUrgentes);
             }
             catch (Exception ex)
             {
@@ -32,7 +36,7 @@ namespace SACDS.Controllers
 
         [HttpGet]
         [Route("GetDonacionUrgente/{id}")]
-        public async Task<ActionResult<DonacionUrgente>> GetDonacionUrgente(int id)
+        public async Task<ActionResult<DonacionUrgenteDTO>> GetDonacionUrgente(int id)
         {
             try
             {
@@ -41,7 +45,7 @@ namespace SACDS.Controllers
                 {
                     return NotFound();
                 }
-                return donacionUrgente;
+                return _mapper.Map<DonacionUrgenteDTO>(donacionUrgente);
             }
             catch (SqlException ex)
             {
@@ -51,10 +55,11 @@ namespace SACDS.Controllers
 
         [HttpPost]
         [Route("AddDonacionUrgente")]
-        public async Task<ActionResult<DonacionUrgente>> AddDonacionUrgente(DonacionUrgente donacionUrgente)
+        public async Task<ActionResult<DonacionUrgente>> AddDonacionUrgente(DonacionUrgenteDTO donacionUrgenteDTO)
         {
             try
             {
+                DonacionUrgente donacionUrgente = _mapper.Map<DonacionUrgente>(donacionUrgenteDTO);
                 _context.DonacionUrgentes.Add(donacionUrgente);
                 await _context.SaveChangesAsync();
                 return CreatedAtAction("GetDonacionUrgente", new { id = donacionUrgente.Id }, donacionUrgente);
@@ -67,12 +72,13 @@ namespace SACDS.Controllers
 
         [HttpPut]
         [Route("UpdateDonacionUrgente/{id}")]
-        public async Task<ActionResult<DonacionUrgente>> UpdateDonacionUrgente(int id, DonacionUrgente donacionUrgente)
+        public async Task<ActionResult<DonacionUrgente>> UpdateDonacionUrgente(int id, DonacionUrgente donacionUrgenteDTO)
         {
-            if (id != donacionUrgente.Id)
+            if (id != donacionUrgenteDTO.Id)
             {
                 return BadRequest();
             }
+            DonacionUrgente donacionUrgente = _mapper.Map<DonacionUrgente>(donacionUrgenteDTO);
             _context.Entry(donacionUrgente).State = EntityState.Modified;
             try
             {

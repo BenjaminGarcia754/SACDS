@@ -1,7 +1,9 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using SACDS.Modelo.DTO;
 using SACDS.Modelo.EntityFramework;
 
 namespace SACDS.Controllers
@@ -11,20 +13,22 @@ namespace SACDS.Controllers
     public class CitaController : ControllerBase
     {
         public readonly SADCDSDbContext _context;
-        public CitaController(SADCDSDbContext context)
+        public readonly IMapper _mapper;
+        public CitaController(SADCDSDbContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
 
         [HttpGet]
         [Route("GetCitas")]
-        public async Task<ActionResult<IEnumerable<Cita>>> GetCitas()
+        public async Task<ActionResult<IEnumerable<CitaDTO>>> GetCitas()
         {
             try
             {
                 List<Cita> citas = _context.Citas.ToList();
-                return citas;
+                return _mapper.Map<List<CitaDTO>>(citas);
             }
             catch (Exception ex)
             {
@@ -34,7 +38,7 @@ namespace SACDS.Controllers
 
         [HttpGet]
         [Route("GetCita/{id}")]
-        public async Task<ActionResult<Cita>> GetCita(int id)
+        public async Task<ActionResult<CitaDTO>> GetCita(int id)
         {
             try
             {
@@ -43,21 +47,21 @@ namespace SACDS.Controllers
                 {
                     return NotFound();
                 }
-                return cita;
+                return _mapper.Map<CitaDTO>(cita);
             }
             catch (SqlException ex)
             {
                 return StatusCode(ex.ErrorCode);
-
             }
         }
 
         [HttpPost]
         [Route("AddCita")]
-        public async Task<ActionResult<Cita>> AddCita(Cita cita)
+        public async Task<ActionResult<Cita>> AddCita(CitaDTO citaDTO)
         {
             try
             {
+                Cita cita = _mapper.Map<Cita>(citaDTO);
                 _context.Citas.Add(cita);
                 await _context.SaveChangesAsync();
                 return CreatedAtAction("GetCita", new { id = cita.Id }, cita);
@@ -70,14 +74,15 @@ namespace SACDS.Controllers
 
         [HttpPut]
         [Route("UpdateCita/{id}")]
-        public async Task<ActionResult<Cita>> UpdateCita(int id, Cita cita)
+        public async Task<ActionResult<Cita>> UpdateCita(int id, CitaDTO citaDTO)
         {
-            if (id != cita.Id)
+            if (id != citaDTO.Id)
             {
                 return BadRequest();
             }
             try
             {
+                Cita cita = _mapper.Map<Cita>(citaDTO);
                 _context.Entry(cita).State = EntityState.Modified;
                 await _context.SaveChangesAsync();
                 return cita;
