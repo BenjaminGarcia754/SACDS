@@ -20,7 +20,6 @@
   <ItemGroup>
     <Folder Include="Aplicacion\" />
     <Folder Include="Infraestructura\" />
-    <Folder Include="Modelo\DTO\" />
     <Folder Include="NewFolder\" />
   </ItemGroup>
 
