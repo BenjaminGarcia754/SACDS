@@ -20,13 +20,32 @@ namespace SACDS.Controllers
             _mapper = mapper;
         }
 
+        [HttpPost]
+        [Route("login")]
+        public async Task<ActionResult<DonadorDTO>> Login(DonadorDTO donadorDTO)
+        {
+            try
+            {
+                Donador donador = await _context.donadors.FirstOrDefaultAsync(d => d.Correo == donadorDTO.Correo && d.Contrasena == donadorDTO.Contrasena);
+                if (donador == null)
+                {
+                    return NotFound();
+                }
+                return _mapper.Map<DonadorDTO>(donador);
+            }
+            catch (SqlException ex)
+            {
+                return StatusCode(ex.ErrorCode);
+            }
+        }
+
         [HttpGet]
         [Route("GetDonadores")]
         public async Task<ActionResult<IEnumerable<DonadorDTO>>> GetDonadores()
         {
             try
             {
-                List<Donador> donadores = _context.donadors.ToList();
+                List<Donador> donadores =await _context.donadors.ToListAsync();
                 return _mapper.Map<List<DonadorDTO>>(donadores);
             }
             catch (Exception ex)
@@ -41,7 +60,7 @@ namespace SACDS.Controllers
         {
             try
             {
-                Donador donador = _context.donadors.FirstOrDefault(d => d.Id == id);
+                Donador donador =await _context.donadors.FirstOrDefaultAsync(d => d.Id == id);
                 if (donador == null)
                 {
                     return NotFound();
@@ -75,7 +94,7 @@ namespace SACDS.Controllers
         [Route("UpdateDonador/{id}")]
         public async Task<ActionResult<Donador>> UpdateDonador(int id, DonadorDTO donadorDTO)
         {
-            if (id != donador.Id)
+            if (id != donadorDTO.Id)
             {
                 return BadRequest();
             }

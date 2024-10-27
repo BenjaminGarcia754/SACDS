@@ -27,7 +27,7 @@ namespace SACDS.Controllers
         {
             try
             {
-                List<Cita> citas = _context.Citas.ToList();
+                List<Cita> citas = await _context.Citas.ToListAsync();
                 return _mapper.Map<List<CitaDTO>>(citas);
             }
             catch (Exception ex)
@@ -42,7 +42,7 @@ namespace SACDS.Controllers
         {
             try
             {
-                Cita cita = _context.Citas.FirstOrDefault(c => c.Id == id);
+                Cita cita = await _context.Citas.FirstOrDefaultAsync(c => c.Id == id);
                 if (cita == null)
                 {
                     return NotFound();
