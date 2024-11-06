@@ -22,7 +22,7 @@ namespace SACDS.Controllers
         {
             try
             {
-                List<TipoDonacion> tipoDonaciones = _context.tipoDonacions.ToList();
+                List<TipoDonacion> tipoDonaciones = await _context.tipoDonacions.ToListAsync();
                 return tipoDonaciones;
             }
             catch (Exception ex)
@@ -37,7 +37,7 @@ namespace SACDS.Controllers
         {
             try
             {
-                TipoDonacion tipoDonacion = _context.tipoDonacions.FirstOrDefault(c => c.Id == id);
+                TipoDonacion tipoDonacion = await _context.tipoDonacions.FirstOrDefaultAsync(c => c.Id == id);
                 if (tipoDonacion == null)
                 {
                     return NotFound();

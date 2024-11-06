@@ -24,5 +24,7 @@ namespace SACDS.Modelo.EntityFramework
         public string Contrasena { get; set; }
         [Required]
         public string GrupoSanguineo { get; set; }
+        [Required]
+        public bool EsDonador { get; set; }
     }
 }

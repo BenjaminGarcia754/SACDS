@@ -20,7 +20,6 @@
 
   <ItemGroup>
     <Folder Include="Aplicacion\" />
-    <Folder Include="NewFolder\" />
   </ItemGroup>
 
 </Project>

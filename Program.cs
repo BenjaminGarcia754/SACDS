@@ -10,7 +10,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext <SADCDSDbContext> (option =>
-    option.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+    option.UseSqlServer(builder.Configuration.GetConnectionString("SADC")));
 
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 

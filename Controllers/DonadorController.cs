@@ -131,5 +131,12 @@ namespace SACDS.Controllers
                 return StatusCode(ex.ErrorCode);
             }
         }
+
+        public bool VerifyCorreo(string correo)
+        {
+            using(var donador = _context.donadors.FirstOrDefault(d => d.Correo == correo))
+            
+            return donador != null ? true : false;
+        }
     }
 }

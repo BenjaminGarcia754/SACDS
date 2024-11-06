@@ -115,6 +115,9 @@ namespace SACDS.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<bool>("EsDonador")
+                        .HasColumnType("bit");
+
                     b.Property<string>("GrupoSanguineo")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");

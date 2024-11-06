@@ -25,7 +25,7 @@ namespace SACDS.Controllers
         {
             try
             {
-                List<DonacionUrgente> donacionesUrgentes = _context.DonacionUrgentes.ToList();
+                List<DonacionUrgente> donacionesUrgentes = await _context.DonacionUrgentes.ToListAsync();
                 return _mapper.Map<List<DonacionUrgenteDTO>>(donacionesUrgentes);
             }
             catch (Exception ex)
@@ -40,7 +40,7 @@ namespace SACDS.Controllers
         {
             try
             {
-                DonacionUrgente donacionUrgente = _context.DonacionUrgentes.FirstOrDefault(c => c.Id == id);
+                DonacionUrgente donacionUrgente = await _context.DonacionUrgentes.FirstOrDefaultAsync(c => c.Id == id);
                 if (donacionUrgente == null)
                 {
                     return NotFound();
