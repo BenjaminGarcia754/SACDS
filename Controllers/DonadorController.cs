@@ -77,16 +77,24 @@ namespace SACDS.Controllers
         [Route("AddDonador")]
         public async Task<ActionResult<Donador>> AddDonador(DonadorDTO donadorDTO)
         {
-            try
+            var DonadorExist = VerifyCorreo(donadorDTO.Correo);
+            if (DonadorExist)
             {
-                Donador donador = _mapper.Map<Donador>(donadorDTO);
-                _context.donadors.Add(donador);
-                await _context.SaveChangesAsync();
-                return CreatedAtAction("GetDonador", new { id = donador.Id }, donador);
+                return StatusCode(StatusCodes.Status409Conflict);
             }
-            catch (SqlException ex)
+            else
             {
-                return StatusCode(ex.ErrorCode);
+                try
+                {
+                    Donador donador = _mapper.Map<Donador>(donadorDTO);
+                    _context.donadors.Add(donador);
+                    await _context.SaveChangesAsync();
+                    return CreatedAtAction("GetDonador", new { id = donador.Id }, donador);
+                }
+                catch (SqlException ex)
+                {
+                    return StatusCode(ex.ErrorCode);
+                }
             }
         }
 
@@ -97,18 +105,24 @@ namespace SACDS.Controllers
             if (id != donadorDTO.Id)
             {
                 return BadRequest();
-            }
-            try
+            }else if (VerifyCorreo(donadorDTO.Correo))
             {
-                Donador donador = _mapper.Map<Donador>(donadorDTO);
-                _context.Entry(donador).State = EntityState.Modified;
-                await _context.SaveChangesAsync();
-                return NoContent();
+                return StatusCode(StatusCodes.Status409Conflict);
             }
-            catch (SqlException ex)
+            else
             {
-                return StatusCode(ex.ErrorCode);
-            }
+                try
+                {
+                    Donador donador = _mapper.Map<Donador>(donadorDTO);
+                    _context.Entry(donador).State = EntityState.Modified;
+                    await _context.SaveChangesAsync();
+                    return NoContent();
+                }
+                catch (SqlException ex)
+                {
+                    return StatusCode(ex.ErrorCode);
+                }
+            }   
         }
 
         [HttpDelete]
